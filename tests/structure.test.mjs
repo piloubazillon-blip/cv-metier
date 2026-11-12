@@ -47,3 +47,24 @@ test("Google sitemap and robots include all pages",()=>{
  }
  assert.match(robots,/Sitemap:/);
 });
+
+test("premium price is always EUR 4.99 and free PDF export remains available",()=>{
+ const worker=read("worker.js");
+ const home=read("index.html");
+ const client=read("payment.js");
+ const success=read("premium.html");
+ const cfg=read("wrangler.jsonc");
+ assert.match(worker,/const AMOUNT = 499;/);
+ assert.match(worker,/payment_status==="paid"/);
+ assert.match(worker,/amount_total===AMOUNT/);
+ assert.match(worker,/metadata\?\.product===PRODUCT/);
+ assert.match(worker,/\/api\/premium-download/);
+ assert.match(worker,/payment_status/);
+ assert.match(client,/price_cents === 499/);
+ assert.match(home,/4,99 €/);
+ assert.match(home,/id="export"/);
+ assert.match(home,/Le CV PDF est gratuit/);
+ assert.match(success,/id="get-letter"/);
+ assert.match(success,/id="get-cv"/);
+ assert.match(cfg,/"PAYMENTS_ENABLED": "false"/);
+});
