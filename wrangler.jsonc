@@ -8,8 +8,5 @@
     "run_worker_first": [
       "/api/*"
     ]
-  },
-  "vars": {
-    "PAYMENTS_ENABLED": "false"
   }
 }
