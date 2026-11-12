@@ -66,5 +66,5 @@ test("premium price is always EUR 4.99 and free PDF export remains available",()
  assert.match(home,/Le CV PDF est gratuit/);
  assert.match(success,/id="get-letter"/);
  assert.match(success,/id="get-cv"/);
- assert.match(cfg,/"PAYMENTS_ENABLED": "false"/);
+ assert.doesNotMatch(cfg,/"PAYMENTS_ENABLED"/); // Cloudflare dashboard controls activation; API defaults to disabled
 });
