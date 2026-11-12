@@ -1,0 +1,11 @@
+.git
+.github
+.assetsignore
+README.md
+worker.js
+wrangler.jsonc
+package.json
+package-lock.json
+tests
+*.zip
+*.md
