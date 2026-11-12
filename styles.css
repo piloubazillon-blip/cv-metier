@@ -42,3 +42,22 @@
 .cv-head{display:flow-root}
 .cv-photo{float:right;width:85px;height:105px;object-fit:cover;object-position:center top;border-radius:5px;margin:0 0 12px 16px;border:1px solid #dfe8eb}
 @media print{.cv-photo{width:27mm!important;height:34mm!important;margin:0 0 5mm 7mm!important;object-fit:cover!important;break-inside:avoid!important}}
+
+/* Premium offer (PDF export remains free) */
+.premium-section{background:#edf6f2;padding:76px 0;border-top:1px solid #dcece6;border-bottom:1px solid #dcece6}
+.premium-grid{display:grid;grid-template-columns:1.4fr .6fr;align-items:center;gap:65px}
+.premium-grid h2{color:#111e32;font-size:clamp(30px,4vw,43px);letter-spacing:-1px;margin:12px 0 16px}
+.premium-grid p,.premium-grid li{font-size:14px;color:#506a62;line-height:1.85}
+.premium-grid ul{padding-left:20px}
+.premium-disclaimer{font-size:12px!important;color:#728780!important}
+.premium-price-card{background:white;border:1px solid #cae2d8;box-shadow:0 16px 35px #274b3d0d;border-radius:16px;padding:28px}
+.premium-price-card>span{font-size:11px;letter-spacing:1.8px;font-weight:800;color:#0a8b69}
+.premium-price-card>strong{display:block;font-size:56px;letter-spacing:-2px;color:#152a3d;margin:12px 0 0}
+.premium-price-card>small{display:block;color:#657688;margin-bottom:24px}
+.premium-price-card button:disabled{opacity:.62;cursor:not-allowed}
+.premium-price-card>p{font-size:12px;color:#5d786d;line-height:1.6}
+.premium-price-card>small:last-child{font-size:10px;line-height:1.55}
+.premium-download-actions{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}
+#target-company{display:block;width:min(100%,500px);margin-top:7px;border:1px solid #cbded6;padding:11px;border-radius:8px;font:inherit}
+@media(max-width:800px){.premium-grid{grid-template-columns:1fr;gap:28px}.premium-section{padding:52px 0}}
+@media print{.premium-section{display:none!important}}
