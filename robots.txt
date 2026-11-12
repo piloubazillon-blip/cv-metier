@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://cv-metier.pilou-bazillon.workers.dev/sitemap.xml
