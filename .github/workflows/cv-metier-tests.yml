@@ -15,5 +15,8 @@ jobs:
         run: |
           node --check app.js
           node --check metiers.js
+          node --check worker.js
+          node --check payment.js
+          node --check premium.js
       - name: Test career pages and CV export wiring
         run: node --test tests/structure.test.mjs
