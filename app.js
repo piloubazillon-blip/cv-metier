@@ -6,7 +6,33 @@
   const stepCounter = document.querySelector("#step-counter");
   const previous = document.querySelector("#previous");
   const next = document.querySelector("#next");
-  const skillInputs = [...document.querySelectorAll("#skills input[type=checkbox]")];
+  const careerProfiles=window.CV_METIERS||{};
+  const jobChoice=document.querySelector("#job-choice");
+  const skillsRoot=document.querySelector("#skills");
+  let skillInputs=[...document.querySelectorAll("#skills input[type=checkbox]")];
+  let activeProfile="preparateur-commandes";
+  function chooseCareer(key,{keepText=false}={}){
+    const profile=careerProfiles[key];
+    if(!profile)return;
+    activeProfile=key;
+    if(jobChoice)jobChoice.value=key;
+    const oldLabel=form.elements.jobTitle.value;
+    if(!keepText||!oldLabel.trim())form.elements.jobTitle.value=profile.title;
+    const previouslySelected=new Set(skillInputs.filter(x=>x.checked).map(x=>x.value));
+    skillsRoot.replaceChildren();
+    for(const item of profile.skills){
+      const label=document.createElement("label");
+      const input=document.createElement("input");
+      input.type="checkbox";input.value=item;
+      input.checked=keepText?previouslySelected.has(item):profile.defaultSkills.includes(item);
+      label.append(input,document.createTextNode(" "+item));
+      skillsRoot.append(label);
+    }
+    skillInputs=[...skillsRoot.querySelectorAll('input[type="checkbox"]')];
+    const note=document.querySelector(".panel-title p");
+    document.querySelector("#out-job").textContent=profile.title.toLocaleUpperCase("fr");
+    update();
+  }
   const cv = document.querySelector("#cv-preview");
   let currentStep = 0;
 
@@ -66,10 +92,9 @@
 
   function suggestSummary() {
     const beginner = value("experienceLevel") !== "experienced";
-    const job = (value("jobTitle") || "préparateur de commandes").toLocaleLowerCase("fr");
-    form.elements.summary.value = beginner
-      ? `Candidat motivé pour un poste de ${job}, souhaitant mettre à profit son sens de l'organisation, sa rigueur et sa capacité à travailler en équipe. Prêt à apprendre les procédures de préparation et de contrôle des commandes.`
-      : `Professionnel du secteur logistique recherchant un poste de ${job}. Habitué à organiser son travail et à respecter les consignes de préparation, de qualité et de sécurité. Soucieux de contribuer à la fiabilité des opérations.`;
+    const profile=careerProfiles[activeProfile];
+    form.elements.summary.value=profile?(beginner?profile.beginner:profile.experienced):"";
+    // Le texte suggéré est une base de rédaction, jamais une certification d'expérience.
     update();
   }
 
@@ -85,6 +110,7 @@
     window.print();
   }
 
+  jobChoice?.addEventListener("change",()=>chooseCareer(jobChoice.value));
   form.addEventListener("input", update);
   form.addEventListener("change", update);
   form.addEventListener("submit", event => event.preventDefault());
@@ -94,7 +120,7 @@
   document.querySelector("#reset").addEventListener("click", () => {
     if (!confirm("Voulez-vous effacer toutes les informations renseignées dans ce formulaire ?")) return;
     form.reset();
-    form.elements.jobTitle.value = "Préparateur de commandes";
+    chooseCareer(activeProfile);
     setStep(0);
     update();
   });
@@ -107,6 +133,8 @@
     setStep(currentStep + 1);
   });
   steps.forEach((step, i) => step.addEventListener("click", () => setStep(i)));
+  const requested=new URLSearchParams(window.location.search).get("metier")||"preparateur-commandes";
+  chooseCareer(Object.hasOwn(careerProfiles,requested)?requested:"preparateur-commandes");
   update();
   setStep(0);
 })();
