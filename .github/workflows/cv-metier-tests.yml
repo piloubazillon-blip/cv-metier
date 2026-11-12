@@ -1,0 +1,19 @@
+name: CV METIER tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate JavaScript
+        run: |
+          node --check app.js
+          node --check metiers.js
+      - name: Test career pages and CV export wiring
+        run: node --test tests/structure.test.mjs
