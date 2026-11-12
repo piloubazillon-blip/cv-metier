@@ -57,8 +57,21 @@ export default {
  async fetch(request, env) {
    const url = new URL(request.url);
    if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
-   if (url.pathname==="/api/payment-config" && request.method==="GET")
-     return json({ enabled:available(env), price_cents:AMOUNT, currency:"eur" });
+   if (url.pathname==="/api/payment-config" && request.method==="GET") {
+     const activationOK=env.PAYMENTS_ENABLED==="true";
+     const secretPresent=typeof env.STRIPE_SECRET_KEY==="string"&&env.STRIPE_SECRET_KEY.length>0;
+     const secretFormatOK=secretPresent&&/^sk_(test|live)_/.test(env.STRIPE_SECRET_KEY);
+     return json({
+       enabled:available(env),
+       price_cents:AMOUNT,
+       currency:"eur",
+       diagnostics:{
+         activation_variable_ok:activationOK,
+         stripe_secret_present:secretPresent,
+         stripe_secret_format_ok:secretFormatOK
+       }
+     });
+   }
    if (url.pathname==="/api/checkout" && request.method==="POST") {
      if (!available(env)) return json({error:"Le paiement n'est pas encore activé."},503);
      if (request.headers.get("Origin")!==rootURL(request)) return json({error:"Origine non autorisée."},403);
