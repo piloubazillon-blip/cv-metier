@@ -33,6 +33,36 @@
     document.querySelector("#out-job").textContent=profile.title.toLocaleUpperCase("fr");
     update();
   }
+  const photoInput=document.querySelector("#cv-photo");
+  const photoPreview=document.querySelector("#out-photo");
+  const removePhoto=document.querySelector("#remove-photo");
+  let photoObjectURL=null;
+  function clearPhoto(){
+    if(photoObjectURL){URL.revokeObjectURL(photoObjectURL);photoObjectURL=null;}
+    if(photoInput)photoInput.value="";
+    if(photoPreview){photoPreview.removeAttribute("src");photoPreview.hidden=true;}
+    if(removePhoto)removePhoto.hidden=true;
+  }
+  photoInput?.addEventListener("change",()=>{
+    const file=photoInput.files?.[0];
+    clearPhotoURL();
+    if(!file){clearPhoto();return;}
+    const allowed=["image/jpeg","image/png","image/webp"];
+    if(!allowed.includes(file.type)||file.size>3*1024*1024){
+      clearPhoto();
+      alert("Choisissez une image JPG, PNG ou WebP de 3 Mo maximum.");
+      return;
+    }
+    photoObjectURL=URL.createObjectURL(file);
+    photoPreview.src=photoObjectURL;
+    photoPreview.hidden=false;
+    removePhoto.hidden=false;
+  });
+  function clearPhotoURL(){
+    if(photoObjectURL){URL.revokeObjectURL(photoObjectURL);photoObjectURL=null;}
+  }
+  removePhoto?.addEventListener("click",clearPhoto);
+  window.addEventListener("pagehide",clearPhotoURL);
   const cv = document.querySelector("#cv-preview");
   let currentStep = 0;
 
@@ -120,6 +150,7 @@
   document.querySelector("#reset").addEventListener("click", () => {
     if (!confirm("Voulez-vous effacer toutes les informations renseignées dans ce formulaire ?")) return;
     form.reset();
+    clearPhoto();
     chooseCareer(activeProfile);
     setStep(0);
     update();
