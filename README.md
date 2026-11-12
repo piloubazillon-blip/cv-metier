@@ -36,7 +36,7 @@ Les informations personnelles du CV sont conservées **temporairement dans l'ong
 - Créer et activer son propre compte sur `https://dashboard.stripe.com/`, compléter la vérification de l'entreprise et les renseignements requis.
 - Dans les paramètres Cloudflare du Worker CV MÉTIER, ajouter la variable **secrète** `STRIPE_SECRET_KEY` (commencer par `sk_test_...`, puis `sk_live_...` en production).
 - Le secret ne doit **jamais** être enregistré dans GitHub ou dans un fichier client.
-- Régler `PAYMENTS_ENABLED` à `true` dans la configuration des variables Cloudflare du Worker ; supprimer / modifier auparavant la valeur `false` dans `wrangler.jsonc` pour ne pas écraser la valeur à chaque déploiement Git.
+- Dans Cloudflare > Worker `cv-metier` > Settings > Variables and Secrets, créer la variable texte `PAYMENTS_ENABLED` avec la valeur `true` **uniquement en mode test**. Elle est volontairement absente de `wrangler.jsonc` : sans activation explicite sur Cloudflare, le paiement reste désactivé.
 - Effectuer un achat de test avec une carte de test Stripe et vérifier que les téléchargements ne sont jamais disponibles en cas d'annulation de paiement.
 - Pour le lancement réel, ajouter mentions légales, informations de rétractation et CGV appropriées aux produits numériques, politique de confidentialité, coordonnées de contact, informations sur facturation et TVA applicable, puis activer les clés de production.
 
